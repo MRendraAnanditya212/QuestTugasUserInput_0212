@@ -234,5 +234,46 @@ fun FormBiodata(modifier: Modifier = Modifier) {
                     .clickable { datePickerDialog.show() }
             )
         }
+        // Experience (Dropdown Standar)
+        Box(modifier = Modifier.weight(1f)) {
+            OutlinedTextField(
+                value = experience,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text(text = stringResource(id = R.string.label_experience)) },
+                trailingIcon = {
+                    IconButton(onClick = { expandedExperienceState = true }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = stringResource(id = R.string.desc_icon_dropdown)
+                        )
+                    }
+                },
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable { expandedExperienceState = true }
+            )
 
-}
+            DropdownMenu(
+                expanded = expandedExperienceState,
+                onDismissRequest = { expandedExperienceState = false }
+            ) {
+                experienceOptions.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(text = option) },
+                        onClick = {
+                            experience = option
+                            expandedExperienceState = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    Spacer(modifier = Modifier.height(20.dp))
+    }
