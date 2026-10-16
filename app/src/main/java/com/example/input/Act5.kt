@@ -134,4 +134,23 @@ fun FormBiodata(modifier: Modifier = Modifier) {
         contentScale = ContentScale.Crop
     )
 
+    // 2. Card/Surface Form Mengapung
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 220.dp),
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        color = colorResource(id = R.color.bg_card_biodata)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Form fields akan dimasukkan di sini
+        }
+    }
+
 }
