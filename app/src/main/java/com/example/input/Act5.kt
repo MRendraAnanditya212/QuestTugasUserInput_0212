@@ -124,4 +124,14 @@ fun FormBiodata(modifier: Modifier = Modifier) {
         }
     }
 
+    // 1. Gambar Latar Belakang
+    Image(
+        painter = painterResource(id = R.drawable.bg_header),
+        contentDescription = stringResource(id = R.string.desc_bg_header),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(280.dp),
+        contentScale = ContentScale.Crop
+    )
+
 }
