@@ -153,4 +153,22 @@ fun FormBiodata(modifier: Modifier = Modifier) {
         }
     }
 
+    // --- Judul & Subjudul ---
+    Text(
+        text = stringResource(id = R.string.title_form_biodata),
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold,
+        color = colorResource(id = R.color.purple_title)
+    )
+
+    Spacer(modifier = Modifier.height(4.dp))
+
+    Text(
+        text = stringResource(id = R.string.subtitle_form_biodata),
+        fontSize = 13.sp,
+        color = colorResource(id = R.color.text_subtitle_gray)
+    )
+
+    Spacer(modifier = Modifier.height(20.dp))
+
 }
