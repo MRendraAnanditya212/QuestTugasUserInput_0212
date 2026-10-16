@@ -111,5 +111,17 @@ fun FormBiodata(modifier: Modifier = Modifier) {
     val webSkill = stringResource(id = R.string.skill_web)
     val previewFormat = stringResource(id = R.string.preview_biodata)
 
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            // Content akan ditambahkan pada part berikutnya
+        }
+    }
 
 }
