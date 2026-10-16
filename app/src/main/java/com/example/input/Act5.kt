@@ -1,5 +1,6 @@
 package com.example.input
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,10 +47,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import android.app.DatePickerDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun FormBiodata(modifier: Modifier = Modifier) {
@@ -71,7 +72,7 @@ fun FormBiodata(modifier: Modifier = Modifier) {
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                tglLahir = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)
+                tglLahir = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month + 1, year)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -79,7 +80,6 @@ fun FormBiodata(modifier: Modifier = Modifier) {
         )
     }
     // --- DROPDOWN STATE ---
-    var expandedExperience by remember { mutableStateOf("") }
     var expandedExperienceState by remember { mutableStateOf(false) }
     val experienceOptions = listOf(
         stringResource(id = R.string.exp_fresh),
@@ -101,7 +101,7 @@ fun FormBiodata(modifier: Modifier = Modifier) {
         colorResource(id = R.color.btn_proceed_inactive_text)
     }
 
-// --- SNACKBAR STATE & COROUTINE ---
+    // --- SNACKBAR STATE & COROUTINE ---
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -120,259 +120,257 @@ fun FormBiodata(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Content akan ditambahkan pada part berikutnya
-        }
-    }
-
-    // 1. Gambar Latar Belakang
-    Image(
-        painter = painterResource(id = R.drawable.bg_header),
-        contentDescription = stringResource(id = R.string.desc_bg_header),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(280.dp),
-        contentScale = ContentScale.Crop
-    )
-
-    // 2. Card/Surface Form Mengapung
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 220.dp),
-        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-        color = colorResource(id = R.color.bg_card_biodata)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Form fields akan dimasukkan di sini
-        }
-    }
-
-    // --- Judul & Subjudul ---
-    Text(
-        text = stringResource(id = R.string.title_form_biodata),
-        fontSize = 28.sp,
-        fontWeight = FontWeight.Bold,
-        color = colorResource(id = R.color.purple_title)
-    )
-
-    Spacer(modifier = Modifier.height(4.dp))
-
-    Text(
-        text = stringResource(id = R.string.subtitle_form_biodata),
-        fontSize = 13.sp,
-        color = colorResource(id = R.color.text_subtitle_gray)
-    )
-
-    Spacer(modifier = Modifier.height(20.dp))
-
-    // --- Baris 1: Nama Depan & Nama Belakang ---
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        OutlinedTextField(
-            value = namaDepan,
-            onValueChange = { namaDepan = it },
-            label = { Text(text = stringResource(id = R.string.label_nama_depan)) },
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(16.dp)
-        )
-        OutlinedTextField(
-            value = namaBelakang,
-            onValueChange = { namaBelakang = it },
-            label = { Text(text = stringResource(id = R.string.label_nama_belakang)) },
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(16.dp)
-        )
-    }
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    // --- Baris 2: Email ---
-    OutlinedTextField(
-        value = email,
-        onValueChange = { email = it },
-        label = { Text(text = stringResource(id = R.string.label_email)) },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
-    )
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    // --- Baris 3: Tgl Lahir & Experience ---
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // Tgl Lahir
-        Box(modifier = Modifier.weight(1f)) {
-            OutlinedTextField(
-                value = tglLahir,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = stringResource(id = R.string.label_tgl_lahir)) },
-                trailingIcon = {
-                    IconButton(onClick = { datePickerDialog.show() }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = stringResource(id = R.string.desc_icon_calendar)
-                        )
-                    }
-                },
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Box(
+            // 1. Gambar Latar Belakang
+            Image(
+                painter = painterResource(id = R.drawable.bg_header),
+                contentDescription = stringResource(id = R.string.desc_bg_header),
                 modifier = Modifier
-                    .matchParentSize()
-                    .clickable { datePickerDialog.show() }
-            )
-        }
-        // Experience (Dropdown Standar)
-        Box(modifier = Modifier.weight(1f)) {
-            OutlinedTextField(
-                value = experience,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = stringResource(id = R.string.label_experience)) },
-                trailingIcon = {
-                    IconButton(onClick = { expandedExperienceState = true }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = stringResource(id = R.string.desc_icon_dropdown)
-                        )
-                    }
-                },
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable { expandedExperienceState = true }
+                    .fillMaxWidth()
+                    .height(280.dp),
+                contentScale = ContentScale.Crop
             )
 
-            DropdownMenu(
-                expanded = expandedExperienceState,
-                onDismissRequest = { expandedExperienceState = false }
+            // 2. Card/Surface Form Mengapung
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 220.dp),
+                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+                color = colorResource(id = R.color.bg_card_biodata)
             ) {
-                experienceOptions.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(text = option) },
-                        onClick = {
-                            experience = option
-                            expandedExperienceState = false
-                        }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp, vertical = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // --- Judul & Subjudul ---
+                    Text(
+                        text = stringResource(id = R.string.title_form_biodata),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.purple_title)
                     )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = stringResource(id = R.string.subtitle_form_biodata),
+                        fontSize = 13.sp,
+                        color = colorResource(id = R.color.text_subtitle_gray)
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // --- Baris 1: Nama Depan & Nama Belakang ---
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = namaDepan,
+                            onValueChange = { namaDepan = it },
+                            label = { Text(text = stringResource(id = R.string.label_nama_depan)) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        OutlinedTextField(
+                            value = namaBelakang,
+                            onValueChange = { namaBelakang = it },
+                            label = { Text(text = stringResource(id = R.string.label_nama_belakang)) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // --- Baris 2: Email ---
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text(text = stringResource(id = R.string.label_email)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // --- Baris 3: Tgl Lahir & Experience ---
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // Tgl Lahir
+                        Box(modifier = Modifier.weight(1f)) {
+                            OutlinedTextField(
+                                value = tglLahir,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text(text = stringResource(id = R.string.label_tgl_lahir)) },
+                                trailingIcon = {
+                                    IconButton(onClick = { datePickerDialog.show() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.DateRange,
+                                            contentDescription = stringResource(id = R.string.desc_icon_calendar)
+                                        )
+                                    }
+                                },
+                                shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .clickable { datePickerDialog.show() }
+                            )
+                        }
+                        // Experience (Dropdown Standar)
+                        Box(modifier = Modifier.weight(1f)) {
+                            OutlinedTextField(
+                                value = experience,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text(text = stringResource(id = R.string.label_experience)) },
+                                trailingIcon = {
+                                    IconButton(onClick = { expandedExperienceState = true }) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowDropDown,
+                                            contentDescription = stringResource(id = R.string.desc_icon_dropdown)
+                                        )
+                                    }
+                                },
+                                shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .clickable { expandedExperienceState = true }
+                            )
+
+                            DropdownMenu(
+                                expanded = expandedExperienceState,
+                                onDismissRequest = { expandedExperienceState = false }
+                            ) {
+                                experienceOptions.forEach { option ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = option) },
+                                        onClick = {
+                                            experience = option
+                                            expandedExperienceState = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // --- Section Skill ---
+                    Text(
+                        text = stringResource(id = R.string.title_pilih_skill),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.black),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(
+                                checked = isAndroidChecked,
+                                onCheckedChange = { isAndroidChecked = it }
+                            )
+                            Text(
+                                text = stringResource(id = R.string.skill_android),
+                                fontSize = 13.sp
+                            )
+                        }
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(
+                                checked = isUiUxChecked,
+                                onCheckedChange = { isUiUxChecked = it }
+                            )
+                            Text(
+                                text = stringResource(id = R.string.skill_uiux),
+                                fontSize = 13.sp
+                            )
+                        }
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(
+                                checked = isWebChecked,
+                                onCheckedChange = { isWebChecked = it }
+                            )
+                            Text(
+                                text = stringResource(id = R.string.skill_web),
+                                fontSize = 13.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    // --- Tombol PROCEED ---
+                    Button(
+                        onClick = {
+                            val selectedSkillsList = mutableListOf<String>()
+                            if (isAndroidChecked) selectedSkillsList.add(androidSkill)
+                            if (isUiUxChecked) selectedSkillsList.add(uiuxSkill)
+                            if (isWebChecked) selectedSkillsList.add(webSkill)
+
+                            val skillText = if (selectedSkillsList.isNotEmpty()) {
+                                selectedSkillsList.joinToString(", ")
+                            } else {
+                                emptyDash
+                            }
+
+                            val summaryMessage = String.format(
+                                Locale.getDefault(),
+                                previewFormat,
+                                namaDepan.ifEmpty { emptyDash },
+                                namaBelakang.ifEmpty { emptyDash },
+                                email.ifEmpty { emptyDash },
+                                tglLahir.ifEmpty { emptyDash },
+                                experience.ifEmpty { emptyDash },
+                                skillText
+                            )
+
+                            coroutineScope.launch {
+                                val snackbarJob = launch {
+                                    snackbarHostState.showSnackbar(message = summaryMessage)
+                                }
+                                delay(5000) // 5 Detik
+                                snackbarJob.cancel()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = btnBgColor
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.btn_proceed),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = btnTextColor
+                        )
+                    }
                 }
             }
         }
     }
-
-    Spacer(modifier = Modifier.height(20.dp))
-    // --- Section Skill ---
-    Text(
-        text = stringResource(id = R.string.title_pilih_skill),
-        fontSize = 15.sp,
-        fontWeight = FontWeight.Bold,
-        color = colorResource(id = R.color.black),
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = isAndroidChecked,
-                onCheckedChange = { isAndroidChecked = it }
-            )
-            Text(
-                text = stringResource(id = R.string.skill_android),
-                fontSize = 13.sp
-            )
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = isUiUxChecked,
-                onCheckedChange = { isUiUxChecked = it }
-            )
-            Text(
-                text = stringResource(id = R.string.skill_uiux),
-                fontSize = 13.sp
-            )
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = isWebChecked,
-                onCheckedChange = { isWebChecked = it }
-            )
-            Text(
-                text = stringResource(id = R.string.skill_web),
-                fontSize = 13.sp
-            )
-        }
-    }
-
-    Spacer(modifier = Modifier.height(28.dp))
-
-    // --- Tombol PROCEED ---
-    Button(
-        onClick = {
-            val selectedSkillsList = mutableListOf<String>()
-            if (isAndroidChecked) selectedSkillsList.add(androidSkill)
-            if (isUiUxChecked) selectedSkillsList.add(uiuxSkill)
-            if (isWebChecked) selectedSkillsList.add(webSkill)
-
-            val skillText = if (selectedSkillsList.isNotEmpty()) {
-                selectedSkillsList.joinToString(", ")
-            } else {
-                emptyDash
-            }
-
-            val summaryMessage = String.format(
-                previewFormat,
-                namaDepan.ifEmpty { emptyDash },
-                namaBelakang.ifEmpty { emptyDash },
-                email.ifEmpty { emptyDash },
-                tglLahir.ifEmpty { emptyDash },
-                experience.ifEmpty { emptyDash },
-                skillText
-            )
-
-            coroutineScope.launch {
-                val snackbarJob = launch {
-                    snackbarHostState.showSnackbar(message = summaryMessage)
-                }
-                delay(5000) // 5 Detik
-                snackbarJob.cancel()
-            }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = btnBgColor
-        )
-    ) {
-        Text(
-            text = stringResource(id = R.string.btn_proceed),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = btnTextColor
-        )
-    }
-    }
+}
