@@ -276,4 +276,55 @@ fun FormBiodata(modifier: Modifier = Modifier) {
     }
 
     Spacer(modifier = Modifier.height(20.dp))
+    // --- Section Skill ---
+    Text(
+        text = stringResource(id = R.string.title_pilih_skill),
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Bold,
+        color = colorResource(id = R.color.black),
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = isAndroidChecked,
+                onCheckedChange = { isAndroidChecked = it }
+            )
+            Text(
+                text = stringResource(id = R.string.skill_android),
+                fontSize = 13.sp
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = isUiUxChecked,
+                onCheckedChange = { isUiUxChecked = it }
+            )
+            Text(
+                text = stringResource(id = R.string.skill_uiux),
+                fontSize = 13.sp
+            )
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = isWebChecked,
+                onCheckedChange = { isWebChecked = it }
+            )
+            Text(
+                text = stringResource(id = R.string.skill_web),
+                fontSize = 13.sp
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(28.dp))
     }
